@@ -25,31 +25,11 @@ github_repo_name="due_date_shields_io_badge-project"
 # Python
 package_name="due_date_shields_io_badge"
 py_ver_major="3"
-py_ver_minor="9"
-py_ver_micro="6"
+py_ver_minor="8"
+py_ver_micro="11"
 use_pyenv="N" # "Y" or "N"
-supported_py_versions="3.9.6" # e.g: "2.7.13 3.6.2"
+supported_py_versions="3.8.11" # e.g: "2.7.13 3.6.2"
 
 
 #--- Doc Build
 rtd_project_name="None"
-
-
-#--- AWS Lambda
-# AWS profile name for deploy lambda function
-# should be defined in ~/.aws/credentials
-# read https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html for more information
-aws_profile_for_deploy="$($path_read_config_value_script $path_shared_config_file "AWS_PROFILE")"
-
-# deployment package file will be upload to:
-# "s3://${s3_bucket_lambda_deploy}/lambda/${github_account}/${github_repo_name}/${package_name}-${package_version}.zip"
-s3_bucket_lambda_deploy="$($path_read_config_value_script $path_shared_config_file "S3_BUCKET_FOR_DEPLOY")"
-
-
-# Docker
-# deployment package will be built in this container
-docker_image_for_build="lambci/lambda:build-python3.6"
-
-# this container will be used for testing lambda invoke
-docker_image_for_run="lambci/lambda:python3.6"
-dir_container_workspace="/var/task"
