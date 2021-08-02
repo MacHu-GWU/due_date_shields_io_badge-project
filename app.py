@@ -39,41 +39,22 @@ def find_label_message_color(due_date: datetime, period_in_sec: int):
     return label, message, color
 
 
-def one_day(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=1 * 24 * 3600)
-
-
-def three_days(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=3 * 24 * 3600)
-
-
-def one_week(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=7 * 24 * 3600)
-
-
-def two_weeks(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=14 * 24 * 3600)
-
-
-def one_month(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=30 * 24 * 3600)
-
-
-def two_months(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=2 * 30 * 24 * 3600)
-
-
-def three_months(due_date: datetime):
-    return find_label_message_color(due_date=due_date, period_in_sec=3 * 30 * 24 * 3600)
-
-
-def build_response(label, message, color):
-    return {
-        "schemaVersion": 1,
-        "label": label,
-        "message": message,
-        "color": color,
-    }
+def build_response(due_date: str, period_in_sec: int):
+    try:
+        label, message, color = find_label_message_color(parse(due_date), period_in_sec)
+        return {
+            "schemaVersion": 1,
+            "label": label,
+            "message": message,
+            "color": color,
+        }
+    except Exception as e:
+        return {
+            "schemaVersion": 1,
+            "label": "error",
+            "message": str(e),
+            "color": "lightgrey",
+        }
 
 
 app = Chalice(app_name="due_date_shields_io_badge")
@@ -81,52 +62,38 @@ app = Chalice(app_name="due_date_shields_io_badge")
 
 @app.route("/1d/{due_date}")
 def handler_one_day(due_date):
-    due_date = parse(due_date)
-    label, message, color = one_day(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 1 * 24 * 3600)
 
 
 @app.route("/3d/{due_date}")
 def handler_three_days(due_date):
-    due_date = parse(due_date)
-    label, message, color = three_days(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 3 * 24 * 3600)
 
 
 @app.route("/1w/{due_date}")
 def handler_one_week(due_date):
-    due_date = parse(due_date)
-    label, message, color = one_week(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 1 * 7 * 24 * 3600)
 
 
 @app.route("/2w/{due_date}")
 def handler_two_weeks(due_date):
-    due_date = parse(due_date)
-    label, message, color = two_weeks(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 2 * 7 * 24 * 3600)
 
 
 @app.route("/1m/{due_date}")
 def handler_one_month(due_date):
-    due_date = parse(due_date)
-    label, message, color = one_month(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 1 * 30 * 24 * 3600)
 
 
 @app.route("/2m/{due_date}")
 def handler_two_month(due_date):
-    due_date = parse(due_date)
-    label, message, color = two_months(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 2 * 30 * 24 * 3600)
 
 
 @app.route("/3m/{due_date}")
 def handler_three_months(due_date):
-    due_date = parse(due_date)
-    label, message, color = three_months(due_date=due_date)
-    return build_response(label, message, color)
+    return build_response(due_date, 3 * 30 * 24 * 3600)
 
 
 if __name__ == "__main__":
-    print(two_weeks(datetime(2021, 8, 13)))
+    print(build_response("2021-08-13", 14 * 24 * 3600))
